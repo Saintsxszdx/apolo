@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Apology Letter for My Love</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: linear-gradient(135deg, #f8e1f4 0%, #e1f4f8 100%);
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+    .envelope-container {
+      position: relative;
+      width: 340px;
+      height: 220px;
+      margin-top: 40px;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .envelope {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0; left: 0;
+      perspective: 800px;
+    }
+    .envelope-flap {
+      width: 100%;
+      height: 60%;
+      background: #fff;
+      position: absolute;
+      top: 0; left: 0;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      border-bottom: 2px solid #e0b0ff;
+      transform-origin: top center;
+      transition: transform 1s cubic-bezier(.77,0,.18,1);
+      z-index: 3;
+      box-shadow: 0 4px 12px #e0b0ff44;
+    }
+    .envelope.open .envelope-flap {
+      transform: rotateX(-120deg);
+    }
+    .envelope-body {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      position: absolute;
+      top: 0; left: 0;
+      border-radius: 20px;
+      border: 2px solid #e0b0ff;
+      box-shadow: 0 8px 32px #e0b0ff33;
+      z-index: 2;
+    }
+    .heart {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 40px;
+      height: 36px;
+      transform: translate(-50%, -50%);
+      z-index: 4;
+      transition: opacity 0.5s;
+    }
+    .heart svg {
+      width: 100%;
+      height: 100%;
+      animation: pulse 1.2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1);}
+      50% { transform: scale(1.15);}
+      100% { transform: scale(1);}
+    }
+    .letter {
+      width: 420px;
+      min-height: 400px;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px #e0b0ff33;
+      border: 2px solid #e0b0ff;
+      margin-top: 30px;
+      padding: 36px 32px 32px 32px;
+      font-size: 1.15rem;
+      color: #5a3d5c;
+      line-height: 1.7;
+      opacity: 0;
+      transform: translateY(40px) scale(0.98);
+      transition: opacity 0.8s, transform 0.8s;
+      position: relative;
+      z-index: 1;
+      overflow-y: auto;
+      max-height: 60vh;
+    }
+    .letter.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .gifts {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-top: 32px;
+      opacity: 0;
+      transform: translateY(40px) scale(0.98);
+      transition: opacity 0.8s, transform 0.8s;
+    }
+    .gifts.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .gift {
+      width: 70px;
+      height: 70px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #e0b0ff 60%, #fff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      box-shadow: 0 4px 16px #e0b0ff33;
+      position: relative;
+      animation: floatGift 2s infinite alternate;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+    }
+    .gift:active {
+      box-shadow: 0 0 0 #e0b0ff33;
+    }
+    .gift:nth-child(2) { animation-delay: 0.5s; }
+    .gift:nth-child(3) { animation-delay: 1s; }
+    @keyframes floatGift {
+      0% { transform: translateY(0);}
+      100% { transform: translateY(-12px);}
+    }
+    .sparkle {
+      position: absolute;
+      pointer-events: none;
+      width: 16px;
+      height: 16px;
+      background: radial-gradient(circle, #fff7b2 60%, #e0b0ff00 100%);
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: sparkle 1.2s linear forwards;
+    }
+    @keyframes sparkle {
+      0% { opacity: 1; transform: scale(0.5);}
+      100% { opacity: 0; transform: scale(1.8);}
+    }
+    .signature {
+      display: block;
+      margin-top: 36px;
+      font-family: 'Dancing Script', cursive, sans-serif;
+      font-size: 1.5rem;
+      color: #e0b0ff;
+      text-align: right;
+      letter-spacing: 2px;
+    }
+    @media (max-width: 600px) {
+      .letter { width: 95vw; padding: 18px 8vw 18px 8vw; }
+      .envelope-container { width: 90vw; height: 160px;}
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0;}
+      100% { transform: scale(1); opacity: 1;}
+    }
+    @keyframes hugPulse {
+      0% { transform: scale(1);}
+      50% { transform: scale(1.15);}
+      100% { transform: scale(1);}
+    }
+  </style>
+  <!-- Google Fonts for signature -->
+  <link href="https://fonts.googleapis.com/css?family=Dancing+Script:700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="envelope-container" id="envelopeContainer">
+    <div class="envelope" id="envelope">
+      <div class="envelope-flap"></div>
+      <div class="envelope-body"></div>
+      <div class="heart" id="heart">
+        <svg viewBox="0 0 32 29.6">
+          <path d="M23.6,0c-2.7,0-5.1,1.6-6.6,4C15.5,1.6,13.1,0,10.4,0C4.7,0,0,4.7,0,10.4
+            c0,7.1,10.6,14.2,15.1,18.2c0.6,0.5,1.5,0.5,2.1,0C21.4,24.6,32,17.5,32,10.4C32,4.7,27.3,0,23.6,0z"
+            fill="#e255a3"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="letter" id="letter">
+    <div id="letterContent">
+      <!-- Write your apology here! -->
+      <h2>My Dearest,</h2>
+      <p>
+        Hey ma I know ur probably tired of my sorry's these days. I keep messing up, saying things that i shouldn't say, making u sad and disappointed in me. I am not writing this to tell u excuses on why i am messing up mnamn. I am here to truly say sorry. i acted really wrong yesterday. I overreacted and kept accusing you. I am being a bad bf these days and i really want to say sorry for that and i am sure it won't be like this again. Idk if the distance between us these days is making me like this but i really miss u. u are always on my mind( not as a distraction) so sorry for my yesterday's behaviour. i lovee youu ma.
+      </p>
+      <span class="signature">Your [Name]</span>
+    </div>
+  </div>
+  <div class="gifts" id="gifts">
+    <div class="gift" title="Flowers">💐</div>
+    <div class="gift" title="Chocolate">🍫</div>
+    <div class="gift" title="Teddy Bear">🧸</div>
+  </div>
+  <script>
+    // Envelope open animation
+    const envelopeContainer = document.getElementById('envelopeContainer');
+    const envelope = document.getElementById('envelope');
+    const letter = document.getElementById('letter');
+    const gifts = document.getElementById('gifts');
+    const heart = document.getElementById('heart');
+    let opened = false;
+
+    envelopeContainer.addEventListener('click', () => {
+      if (opened) return;
+      envelope.classList.add('open');
+      heart.style.opacity = 0;
+      setTimeout(() => {
+        letter.classList.add('visible');
+        for (let i = 0; i < 18; i++) {
+          setTimeout(() => createSparkle(envelopeContainer), i * 60);
+        }
+        setTimeout(() => {
+          gifts.classList.add('visible');
+        }, 1200);
+      }, 900);
+      opened = true;
+    });
+
+    function createSparkle(parent) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.style.left = (Math.random() * 90 + 5) + '%';
+      sparkle.style.top = (Math.random() * 80 + 10) + '%';
+      sparkle.style.zIndex = 10;
+      parent.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 1200);
+    }
+
+    // Spice: Gifts bounce on hover
+    document.querySelectorAll('.gift').forEach(gift => {
+      gift.addEventListener('mouseenter', () => {
+        gift.style.transform = 'scale(1.2) rotate(-8deg)';
+      });
+      gift.addEventListener('mouseleave', () => {
+        gift.style.transform = '';
+      });
+    });
+
+    // --- Interactive gifts and popups ---
+    const giftMessages = {
+      "Flowers": "These flowers are for you, 🌸",
+      "Chocolate": "Sweet chocolate for my sweetest love 🍫",
+      "Teddy Bear": "A teddy bear to hug when I'm not there 🧸"
+    };
+    let clickedGifts = {};
+
+    // Create popup container
+    const popupContainer = document.createElement('div');
+    popupContainer.style.position = 'fixed';
+    popupContainer.style.top = '0';
+    popupContainer.style.left = '0';
+    popupContainer.style.width = '100vw';
+    popupContainer.style.height = '100vh';
+    popupContainer.style.display = 'none';
+    popupContainer.style.alignItems = 'center';
+    popupContainer.style.justifyContent = 'center';
+    popupContainer.style.zIndex = '9999';
+    popupContainer.style.background = 'rgba(0,0,0,0.25)';
+    document.body.appendChild(popupContainer);
+
+    function showPopup(html, options = {}) {
+      popupContainer.innerHTML = `
+        <div style="
+          background: #fff;
+          border-radius: 18px;
+          box-shadow: 0 8px 32px #e0b0ff66;
+          padding: 36px 32px;
+          min-width: 260px;
+          max-width: 90vw;
+          text-align: center;
+          font-size: 1.2rem;
+          color: #5a3d5c;
+          position: relative;
+          animation: popIn 0.4s;
+        ">
+          ${html}
+        </div>
+      `;
+      popupContainer.style.display = 'flex';
+      if (options.onClose) {
+        popupContainer.onclick = (e) => {
+          if (e.target === popupContainer) {
+            popupContainer.style.display = 'none';
+            options.onClose();
+          }
+        };
+      } else {
+        popupContainer.onclick = (e) => {
+          if (e.target === popupContainer) popupContainer.style.display = 'none';
+        };
+      }
+    }
+
+    function closePopup() {
+      popupContainer.style.display = 'none';
+    }
+
+    // Animate gifts on click
+    document.querySelectorAll('.gift').forEach(gift => {
+      gift.addEventListener('click', function handler() {
+        const giftType = gift.title;
+        if (clickedGifts[giftType]) return;
+        clickedGifts[giftType] = true;
+        // Animate pop
+        gift.style.transition = 'transform 0.3s cubic-bezier(.68,-0.55,.27,1.55)';
+        gift.style.transform = 'scale(1.5) rotate(12deg)';
+        setTimeout(() => {
+          gift.style.transform = '';
+        }, 300);
+        // Show popup
+        showPopup(`<div style="font-size:2.5rem">${gift.innerHTML}</div><div style="margin-top:18px">${giftMessages[giftType]}</div><button id="closeGift" style="margin-top:22px;padding:8px 24px;border:none;background:#e0b0ff;color:#fff;border-radius:8px;font-size:1rem;cursor:pointer;">Aww, thank you!</button>`);
+        document.getElementById('closeGift').onclick = () => {
+          closePopup();
+          // Check if all gifts clicked
+          if (Object.keys(clickedGifts).length === 3) {
+            setTimeout(showHugPopup, 500);
+          }
+        };
+      });
+    });
+
+    // Hug popup (loop until "Yes" is clicked)
+    function showHugPopup() {
+      showPopup(`
+        <div style="font-size:2.5rem">🤗</div>
+        <div style="margin-top:18px;font-weight:bold;">Here is your virtual hug!<br>Would you like to accept it?</div>
+        <div style="margin-top:22px;display:flex;justify-content:center;gap:24px;">
+          <button id="hugYes" style="padding:8px 24px;border:none;background:#e0b0ff;color:#fff;border-radius:8px;font-size:1rem;cursor:pointer;">Yes</button>
+          <button id="hugNo" style="padding:8px 24px;border:none;background:#ccc;color:#fff;border-radius:8px;font-size:1rem;cursor:not-allowed;opacity:0.7;">No</button>
+        </div>
+      `);
+      document.getElementById('hugYes').onclick = () => {
+        closePopup();
+        setTimeout(showVirtualHug, 300);
+      };
+      document.getElementById('hugNo').onclick = () => {
+        showErrorPopup();
+      };
+    }
+
+    // Error popup for "No" (loops back to hug popup)
+    function showErrorPopup() {
+      showPopup(`
+        <div style="font-size:2.5rem">😢</div>
+        <div style="margin-top:18px;font-weight:bold;">Oh no! My heart is broken 💔</div>
+        <button id="closeError" style="margin-top:22px;padding:8px 24px;border:none;background:#e0b0ff;color:#fff;border-radius:8px;font-size:1rem;cursor:pointer;">Okay...</button>
+      `);
+      document.getElementById('closeError').onclick = () => {
+        closePopup();
+        setTimeout(showHugPopup, 300);
+      };
+    }
+
+    // Virtual hug animation
+    function showVirtualHug() {
+      showPopup(`
+        <div style="font-size:3rem;animation: hugPulse 1.2s infinite;">🤗</div>
+        <div style="margin-top:18px;font-weight:bold;">I am hugging you!<br><span id="hugTimer">10</span> seconds left...</div>
+      `, { onClose: null });
+      let seconds = 10;
+      const timer = setInterval(() => {
+        seconds--;
+        document.getElementById('hugTimer').textContent = seconds;
+        if (seconds <= 0) {
+          clearInterval(timer);
+          closePopup();
+          setTimeout(showSorryPopup, 400);
+        }
+      }, 1000);
+    }
+
+    // Final "I am sorry" popup at the bottom
+    function showSorryPopup() {
+      const sorryDiv = document.createElement('div');
+      sorryDiv.textContent = "I am really sorry for messing up these days. i miss you ❤️";
+      sorryDiv.style.position = 'fixed';
+      sorryDiv.style.bottom = '32px';
+      sorryDiv.style.left = '50%';
+      sorryDiv.style.transform = 'translateX(-50%)';
+      sorryDiv.style.background = '#e0b0ff';
+      sorryDiv.style.color = '#fff';
+      sorryDiv.style.padding = '18px 36px';
+      sorryDiv.style.borderRadius = '16px';
+      sorryDiv.style.fontSize = '1.3rem';
+      sorryDiv.style.boxShadow = '0 4px 16px #e0b0ff55';
+      sorryDiv.style.zIndex = '9999';
+      sorryDiv.style.opacity = '0';
+      sorryDiv.style.transition = 'opacity 0.8s';
+      document.body.appendChild(sorryDiv);
+      setTimeout(() => {
+        sorryDiv.style.opacity = '1';
+      }, 100);
+    }
+  </script>
+</body>
+</html>
